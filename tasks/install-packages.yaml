@@ -1,0 +1,34 @@
+---
+
+- name: Install prerequisites from apt when Debian based
+  apt:
+    name: "{{item}}"
+    state: latest
+    update_cache: yes
+    upgrade: safe
+  with_items: "{{ common_packages }} + {{ debian_packages }}"
+  when: ansible_os_family == "Debian"
+
+- name: Upgrade all packages when red hat
+  yum:
+    name: '*'
+    state: latest
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat'
+
+- name: Install from yum when red hat based
+  yum:
+    name: "{{item}}"
+    state: latest
+    update_cache: yes
+  with_items: "{{ common_packages }} + {{ red_hat_packages }}"
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat'
+
+- name: Upgrade pip
+  pip: 
+    name: pip
+    extra_args: --upgrade
+
+- name: Install boto3 from pip
+  pip: 
+    name: "{{item}}"
+  with_items: "{{ pip_packages }}"

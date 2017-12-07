@@ -1,0 +1,12 @@
+---
+
+- name: Common tasks
+  hosts: all
+  become: yes
+  become_method: sudo
+  vars_files:
+    - "vars/packages-list.yaml"
+  roles:
+    - ansible-role-aws-tools
+  tasks:
+    - include_tasks: tasks/install-packages.yaml

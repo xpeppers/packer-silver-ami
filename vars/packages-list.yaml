@@ -1,0 +1,25 @@
+---
+
+common_packages:
+  - curl
+  - git
+  - wget
+  - bzip2
+  - net-tools
+  - python-pip
+  - rsync
+  - tar
+  - unzip
+  - vim
+  - wget
+  - zip
+
+debian_packages:
+  - git
+
+red_hat_packages:
+  - git
+
+pip_packages:
+  - boto3
+  - boto
