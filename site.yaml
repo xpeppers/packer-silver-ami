@@ -5,7 +5,7 @@
   become: yes
   become_method: sudo
   vars_files:
-    - "vars/packages-list.yaml"
+    - vars/packages-list.yaml
   roles:
     - ansible-role-aws-tools
   tasks:
