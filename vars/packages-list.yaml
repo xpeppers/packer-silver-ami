@@ -1,25 +1,36 @@
 ---
 
 common_packages:
+  - bind-utils
+  - byobu
+  - bzip2
+  - colordiff
   - curl
   - git
-  - wget
-  - bzip2
+  - htop
+  - iftop
+  - mc
+  - nano
   - net-tools
+  - nfs-utils
   - python-pip
   - rsync
   - tar
+  - tree
   - unzip
   - vim
   - wget
   - zip
 
 debian_packages:
-  - git
+  - netcat
+  - silversearcher-ag
 
 red_hat_packages:
-  - git
+  - nc
+  - telnet
+  - the_silver_searcher
 
 pip_packages:
-  - boto3
   - boto
+  - boto3
