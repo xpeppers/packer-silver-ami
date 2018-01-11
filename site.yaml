@@ -10,3 +10,4 @@
     - ansible-role-aws-tools
   tasks:
     - include_tasks: tasks/install-packages.yaml
+    - include_tasks: tasks/oh_my_zsh.yaml
