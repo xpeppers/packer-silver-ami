@@ -25,13 +25,7 @@
 
     "provisioners": [
     {
-        "type": "shell",
-        "inline": [
-            "sudo pip install ansible"
-        ]
-    },
-    {
-      "type": "ansible-local",
+      "type": "ansible",
       "playbook_file": "site.yaml"
     }
   ]
