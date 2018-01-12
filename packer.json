@@ -1,7 +1,7 @@
 {
     "variables": {
         "aws_region": "{{env `AWS_REGION`}}",
-        "aws_ami_name": "amazon-linux_{{isotime \"02Jan2006\"}}"
+        "aws_ami_name": "centos7_{{isotime \"02Jan2006\"}}"
     },
 
     "builders": [{
@@ -12,15 +12,7 @@
         "ami_name": "{{user `aws_ami_name`}}",
         "ami_description": "Customized Amazon Linux",
         "associate_public_ip_address": "true",
-        "source_ami_filter": {
-            "filters": {
-                "virtualization-type": "hvm",
-                "name": "amzn-ami*-ebs",
-                "root-device-type": "ebs"
-            },
-            "owners": ["137112412989", "591542846629", "801119661308", "102837901569", "013907871322", "206029621532", "286198878708", "443319210888"],
-            "most_recent": true
-        }
+        "source_ami": "ami-061b1560"
     }],
 
     "provisioners": [
