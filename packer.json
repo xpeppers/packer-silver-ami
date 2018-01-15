@@ -17,6 +17,12 @@
   ],
   "provisioners": [
     {
+      "type": "shell",
+      "inline": [
+        "sudo yum install -y ansible"
+      ]
+    },
+    {
       "type": "ansible-local",
       "playbook_file": "ansible/site.yaml",
       "role_paths": [
