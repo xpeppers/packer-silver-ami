@@ -1,0 +1,64 @@
+---
+Parameters:
+  CodeCommitURL:
+    Type: String
+
+Resources:
+  CodeBuildRole:
+    Type: "AWS::IAM::Role"
+    Properties: 
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: codebuild.amazonaws.com
+          Action: sts:AssumeRole
+      Path: "/"
+      Policies:
+      - PolicyName: codebuild-role-for-packer
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - ec2:*
+            Resource: "*"
+          - Effect: Allow
+            Action:
+             - logs:CreateLogGroup
+             - logs:CreateLogStream
+             - logs:PutLogEvents
+            Resource: "*"
+          - Effect: Allow
+            Action:
+             - sns:Publish
+             - iam:PassRole
+            Resource: "*"
+          - Effect: Allow
+            Action:
+             - codecommit:*
+            Resource: "*"
+          - Effect: Allow
+            Action:
+             - events:PutEvents
+            Resource: "*"
+  CodeBuildPacker:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: CodeBuildPacker
+      Description: Packer builder
+      ServiceRole: !GetAtt CodeBuildRole.Arn
+      Artifacts:
+        Type: no_artifacts
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/eb-python-2.7-amazonlinux-64:2.1.6
+        EnvironmentVariables:
+        - Name: AWS_REGION
+          Value: eu-west-1
+      Source:
+        Location: !Ref CodeCommitURL
+        Type: CODECOMMIT
+      TimeoutInMinutes: 10
