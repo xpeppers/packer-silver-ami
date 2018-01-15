@@ -61,4 +61,4 @@ Resources:
       Source:
         Location: !Ref CodeCommitURL
         Type: CODECOMMIT
-      TimeoutInMinutes: 10
+      TimeoutInMinutes: 30
