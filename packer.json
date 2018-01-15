@@ -25,9 +25,6 @@
     {
       "type": "ansible-local",
       "playbook_file": "ansible/site.yaml",
-      "role_paths": [
-        "ansible/roles"
-      ],
       "playbook_dir": "ansible"
     }
   ]
