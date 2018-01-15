@@ -8,7 +8,7 @@
       "type": "amazon-ebs",
       "region": "{{user `aws_region`}}",
       "instance_type": "t2.micro",
-      "ssh_username": "ec2-user",
+      "ssh_username": "centos",
       "ami_name": "{{user `aws_ami_name`}}",
       "ami_description": "Customized Amazon Linux",
       "associate_public_ip_address": "true",
