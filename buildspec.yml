@@ -21,8 +21,8 @@ phases:
       - aws configure set aws_secret_access_key `./jq -r '.SecretAccessKey' aws_credentials.json`
       - aws configure set aws_session_token `./jq -r '.Token' aws_credentials.json`
 #      - git submodule update --init --recursive
-      - rm -rf roles/ansible-role-aws-tools
-      - git clone https://github.com/xpeppers/ansible-role-aws-tools.git roles/ansible-role-aws-tools
+      - rm -rf ansible/roles/ansible-role-aws-tools
+      - git clone https://github.com/xpeppers/ansible-role-aws-tools.git ansible/roles/ansible-role-aws-tools
       - ./packer build -color=false packer_files/packer_${DISTRO}.json | tee build.log
   post_build:
     commands:
