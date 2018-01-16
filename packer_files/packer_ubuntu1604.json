@@ -23,7 +23,9 @@
     {
       "type": "shell",
       "inline": [
-        "curl -s https://bootstrap.pypa.io/get-pip.py | sudo python",
+        "sudo apt-get update",
+        "sudo apt-get install --yes python2.7",
+        "curl -s https://bootstrap.pypa.io/get-pip.py | sudo python2.7",
         "sudo pip install --upgrade pip",
         "sudo pip install ansible"
       ]
