@@ -8,7 +8,6 @@ common_packages:
   - iftop
   - mc
   - nano
-  - nfs-utils
   - python-pip
   - rsync
   - tar
@@ -28,6 +27,7 @@ red_hat_packages:
   - bind-utils
   - nc
   - net-tools
+  - nfs-utils
   - telnet
   - the_silver_searcher
 
