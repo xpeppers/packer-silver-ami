@@ -21,6 +21,7 @@ common_packages:
   - vim
   - wget
   - zip
+  - zsh
 
 debian_packages:
   - netcat
