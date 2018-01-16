@@ -2,7 +2,6 @@
 
 common_packages:
   - bzip2
-  - colordiff
   - curl
   - git
   - htop
