@@ -1,11 +1,15 @@
 ---
 
+- name: Update system when Debian based
+  apt:
+    update_cache: yes
+    upgrade: safe
+  when: ansible_os_family == "Debian"
+
 - name: Install prerequisites from apt when Debian based
   apt:
     name: "{{item}}"
     state: latest
-    update_cache: yes
-    upgrade: safe
   with_items: "{{ common_packages }} + {{ debian_packages }}"
   when: ansible_os_family == "Debian"
 
