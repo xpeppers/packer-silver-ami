@@ -2,7 +2,6 @@
 
 common_packages:
   - bind-utils
-  - byobu
   - bzip2
   - colordiff
   - curl
