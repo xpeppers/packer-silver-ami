@@ -1,0 +1,32 @@
+{
+  "variables": {
+    "aws_region": "{{env `AWS_REGION`}}",
+    "aws_ami_name": "rhel71_{{isotime \"02Jan2006\"}}",
+    "aws_ami_description": "RHEL 7.1"
+  },
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "region": "{{user `aws_region`}}",
+      "instance_type": "t2.medium",
+      "ssh_username": "ec2-user",
+      "ami_name": "{{user `aws_ami_name`}}",
+      "ami_description":"{{user `aws_ami_description`}}",
+      "associate_public_ip_address": "true",
+      "source_ami": "ami-25158352"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "sudo yum install -y ansible"
+      ]
+    },
+    {
+      "type": "ansible-local",
+      "playbook_file": "ansible/site.yaml",
+      "playbook_dir": "ansible"
+    }
+  ]
+}
