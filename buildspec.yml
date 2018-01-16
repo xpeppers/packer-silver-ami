@@ -21,7 +21,7 @@ phases:
       - aws configure set aws_secret_access_key `./jq -r '.SecretAccessKey' aws_credentials.json`
       - aws configure set aws_session_token `./jq -r '.Token' aws_credentials.json`
       - git submodule update --init --recursive
-      - ./packer build -color=false ../packer/packer_rhel71.json | tee build.log
+      - ./packer build -color=false packer_files/packer_rhel71.json | tee build.log
   post_build:
     commands:
       - egrep "${AWS_REGION}\:\sami\-" build.log | cut -d' ' -f2 > ami_id.txt

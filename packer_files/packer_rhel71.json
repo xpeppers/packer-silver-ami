@@ -13,7 +13,8 @@
       "ami_name": "{{user `aws_ami_name`}}",
       "ami_description":"{{user `aws_ami_description`}}",
       "associate_public_ip_address": "true",
-      "source_ami": "ami-25158352"
+      "source_ami": "ami-25158352",
+      "ssh_pty": "true"
     }
   ],
   "provisioners": [
