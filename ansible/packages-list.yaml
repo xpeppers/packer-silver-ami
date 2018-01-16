@@ -1,7 +1,6 @@
 ---
 
 common_packages:
-  - bind-utils
   - bzip2
   - colordiff
   - curl
@@ -10,7 +9,6 @@ common_packages:
   - iftop
   - mc
   - nano
-  - net-tools
   - nfs-utils
   - python-pip
   - rsync
@@ -25,9 +23,12 @@ common_packages:
 debian_packages:
   - netcat
   - silversearcher-ag
+  - nfs-common
 
 red_hat_packages:
+  - bind-utils
   - nc
+  - net-tools
   - telnet
   - the_silver_searcher
 
