@@ -3,11 +3,11 @@
 - name: Clone oh-my-zsh official project
   git:
     repo: https://github.com/robbyrussell/oh-my-zsh
-    dest: "/home/{{ ssh_username }}/.oh-my-zsh"
+    dest: "/home/{{ ansible_ssh_user }}/.oh-my-zsh"
   sudo: no
 
 - name: Creating new ~/.zshrc
   copy:
-    src: "/home/{{ ssh_username }}/.oh-my-zsh/templates/zshrc.zsh-template"
-    dest: "/home/{{ ssh_username }}/.zshrc"
+    src: "/home/{{ ansible_ssh_user }}/.oh-my-zsh/templates/zshrc.zsh-template"
+    dest: "/home/{{ ansible_ssh_user }}/.zshrc"
   sudo: no
