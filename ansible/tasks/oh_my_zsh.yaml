@@ -6,5 +6,14 @@
     dest: /tmp/install-oh-my-zsh.sh
     mode: 0777
 
-- name: Install oh my zsh
-  command: yes | bash /tmp/install-oh-my-zsh.sh
+- name: Clone oh-my-zsh official project
+  git:
+    repo: https://github.com/robbyrussell/oh-my-zsh
+    dest: ~/.oh-my-zsh
+  sudo: no
+
+- name: Creating new ~/.zshrc
+  copy:
+    src: ~/.oh-my-zsh/templates/zshrc.zsh-template
+    dest: ~/.zshrc
+  sudo: no
