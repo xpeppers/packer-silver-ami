@@ -1,19 +1,21 @@
 {
   "variables": {
     "aws_region": "{{env `AWS_REGION`}}",
-    "aws_ami_name": "rhel71_{{isotime \"02Jan2006\"}}",
-    "aws_ami_description": "RHEL 7.1"
+    "aws_ami_name": "rhel74_{{isotime \"02Jan2006\"}}",
+    "aws_ami_description": "RHEL 7.4",
+    "source_ami": "ami-c90195b0",
+    "ssh_username": "ec2-user"
   },
   "builders": [
     {
       "type": "amazon-ebs",
       "region": "{{user `aws_region`}}",
       "instance_type": "t2.medium",
-      "ssh_username": "ec2-user",
+      "ssh_username": "{{user `ssh_username`}}",
       "ami_name": "{{user `aws_ami_name`}}",
       "ami_description":"{{user `aws_ami_description`}}",
       "associate_public_ip_address": "true",
-      "source_ami": "ami-25158352",
+      "source_ami": "{{user `source_ami`}}",
       "ssh_pty": "true"
     }
   ],
