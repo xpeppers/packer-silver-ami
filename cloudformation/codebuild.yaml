@@ -58,6 +58,8 @@ Resources:
         EnvironmentVariables:
         - Name: AWS_REGION
           Value: eu-west-1
+        - Name: DISTRO
+          Value: rhel74
       Source:
         Location: !Ref CodeCommitURL
         Type: CODECOMMIT
