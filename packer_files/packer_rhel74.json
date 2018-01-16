@@ -23,7 +23,9 @@
     {
       "type": "shell",
       "inline": [
-        "sudo yum install -y ansible"
+        "curl -s https://bootstrap.pypa.io/get-pip.py | python",
+        "pip install --upgrade pip",
+        "pip install ansible"
       ]
     },
     {
