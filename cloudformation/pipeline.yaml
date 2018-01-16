@@ -1,0 +1,333 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+
+    CodeBuildEnvironment:
+        Type: String
+        Default: "aws/codebuild/eb-python-2.7-amazonlinux-64:2.1.6"
+        Description: Docker image to use for CodeBuild container - Use http://amzn.to/2mjCI91 for reference
+
+    NotificationEmailAddress:
+        Type: String
+        Description: Email to receive new AMI ID created by AMI Builder
+
+    GitHubRepoName:
+        Type: String
+        Description: GitHub repository
+
+    GitHubUsername:
+        Type: String
+        Description: GitHub username
+
+    BucketName:
+        Type: String
+        Description: Bucket name
+
+    GitHubToken:
+        Type: String
+        Description: Token needed to read from GitHub
+        NoEcho: true
+
+Resources:
+
+    #########
+    # Build #
+    #########
+
+    # S3 Bucket that CodePipeline/CodeBuild service will use
+    # It will receive both SourceZip (CodeCommit Git HEAD) and BuiltZIP (CodeBuild Artifacts)
+    BuildArtifactsBucket:
+        Type: AWS::S3::Bucket
+        Properties:
+            BucketName: !Ref BucketName
+
+    CodeBuildServiceRole:
+        Type: AWS::IAM::Role
+        Properties:
+            Path: '/managed/'
+            ManagedPolicyArns:
+              - 'arn:aws:iam::aws:policy/PowerUserAccess'
+            AssumeRolePolicyDocument:
+                Version: '2012-10-17'
+                Statement:
+                  - 
+                    Action: 'sts:AssumeRole'
+                    Effect: Allow
+                    Principal:
+                      Service:
+                        - codebuild.amazonaws.com
+            Policies:
+                - 
+                  PolicyName: CodeBuildAccess
+                  PolicyDocument:
+                    Version: '2012-10-17'
+                    Statement:
+                      - 
+                        Sid: "CodeBuildToCWL"
+                        Effect: Allow
+                        Action:
+                          - 'logs:CreateLogGroup'
+                          - 'logs:CreateLogStream'
+                          - 'logs:PutLogEvents'
+                        Resource:
+                          - '*'
+                      - 
+                        Sid: "CodeBuildToS3ArtifactRepo"
+                        Effect: Allow
+                        Action: 
+                          - 's3:GetObject'
+                          - 's3:GetObjectVersion'
+                          - 's3:PutObject'
+                        Resource: !Sub 'arn:aws:s3:::${BuildArtifactsBucket}/*'
+
+    CodeBuildProjectRHEL74:
+        Type: AWS::CodeBuild::Project
+        Properties:
+            Name: CodeBuildPackerRHEL74
+            Description: Packer builder
+            TimeoutInMinutes: 30
+            ServiceRole: !GetAtt CodeBuildServiceRole.Arn
+            Artifacts:
+                Type: CODEPIPELINE
+            Environment:
+                Type: LINUX_CONTAINER
+                ComputeType: BUILD_GENERAL1_SMALL
+                Image: !Ref CodeBuildEnvironment
+                EnvironmentVariables:
+                - Name: AWS_REGION
+                  Value: eu-west-1
+                - Name: DISTRO
+                  Value: rhel74
+            Source: 
+                Type: CODEPIPELINE
+
+    CodeBuildProjectCentos7:
+        Type: AWS::CodeBuild::Project
+        Properties:
+            Name: CodeBuildPackerCentos7
+            Description: Packer builder
+            TimeoutInMinutes: 30
+            ServiceRole: !GetAtt CodeBuildServiceRole.Arn
+            Artifacts:
+                Type: CODEPIPELINE
+            Environment:
+                Type: LINUX_CONTAINER
+                ComputeType: BUILD_GENERAL1_SMALL
+                Image: !Ref CodeBuildEnvironment
+                EnvironmentVariables:
+                - Name: AWS_REGION
+                  Value: eu-west-1
+                - Name: DISTRO
+                  Value: centos7
+            Source: 
+                Type: CODEPIPELINE
+
+    CodeBuildProjectUbuntu1604:
+        Type: AWS::CodeBuild::Project
+        Properties:
+            Name: CodeBuildPackerUbuntu1604
+            Description: Packer builder
+            TimeoutInMinutes: 30
+            ServiceRole: !GetAtt CodeBuildServiceRole.Arn
+            Artifacts:
+                Type: CODEPIPELINE
+            Environment:
+                Type: LINUX_CONTAINER
+                ComputeType: BUILD_GENERAL1_SMALL
+                Image: !Ref CodeBuildEnvironment
+                EnvironmentVariables:
+                - Name: AWS_REGION
+                  Value: eu-west-1
+                - Name: DISTRO
+                  Value: ubuntu1604
+            Source: 
+                Type: CODEPIPELINE
+
+    #############
+    # Pipeline  #
+    #############
+  
+    PipelineExecutionRole:
+      Type: AWS::IAM::Role
+      Properties:
+          Path: '/managed/'      
+          AssumeRolePolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - 
+                  Action: 'sts:AssumeRole'
+                  Effect: Allow
+                  Principal:
+                    Service: 
+                      - codepipeline.amazonaws.com
+          Policies:
+              - 
+                PolicyName: CodePipelinePassRoleAccess
+                PolicyDocument:
+                  Version: '2012-10-17'
+                  Statement:
+                      - 
+                        Action: 'iam:PassRole'
+                        Effect: Allow
+                        Resource: !GetAtt CodeBuildServiceRole.Arn
+              - 
+                PolicyName: CodePipelineS3ArtifactAccess
+                PolicyDocument:
+                  Version: '2012-10-17'
+                  Statement:
+                      - 
+                        Action:
+                          - 's3:GetObject'
+                          - 's3:GetObjectVersion'
+                          - 's3:GetBucketVersioning'
+                          - 's3:PutObject'
+                        Effect: Allow
+                        Resource: 
+                          - !Sub 'arn:aws:s3:::${BuildArtifactsBucket}'
+                          - !Sub 'arn:aws:s3:::${BuildArtifactsBucket}/*'
+              - 
+                PolicyName: CodePipelineBuildAccess
+                PolicyDocument:
+                  Version: '2012-10-17'
+                  Statement:
+                      - 
+                        Action:
+                          - 'codebuild:StartBuild'
+                          - 'codebuild:StopBuild'
+                          - 'codebuild:BatchGetBuilds'
+                        Effect: Allow
+                        Resource:
+                            - !GetAtt CodeBuildProjectRHEL74.Arn
+                            - !GetAtt CodeBuildProjectCentos7.Arn
+                            - !GetAtt CodeBuildProjectUbuntu1604.Arn
+
+    Pipeline:
+        Type: AWS::CodePipeline::Pipeline
+        Properties:
+            ArtifactStore: 
+                Location: !Ref BuildArtifactsBucket
+                Type: S3
+            Name: SilverImageAMIPipeline
+            RoleArn: !GetAtt PipelineExecutionRole.Arn
+            Stages:
+                - 
+                  Name: Source
+                  Actions:
+                    - 
+                      Name: Repository
+                      ActionTypeId:
+                        Category: Source
+                        Owner: ThirdParty
+                        Provider: GitHub
+                        Version: 1
+                      Configuration:
+                        Owner: !Ref GitHubUsername
+                        Repo: !Ref GitHubRepoName
+                        Branch: master
+                        OAuthToken: !Ref GitHubToken
+                      OutputArtifacts:
+                        - Name: SourceZip
+                      RunOrder: 1
+                - 
+                  Name: BuildAMI
+                  Actions:
+                    - 
+                      Name: CodeBuildRHEL74
+                      ActionTypeId:
+                        Category: Build
+                        Owner: AWS
+                        Provider: CodeBuild
+                        Version: 1
+                      Configuration:
+                        ProjectName: !Ref CodeBuildProjectRHEL74
+                      InputArtifacts:
+                        - Name: SourceZip
+                      OutputArtifacts:
+                        - Name: BuiltZipRHEL74
+                      RunOrder: 2
+                    - 
+                      Name: CodeBuildCentos7
+                      ActionTypeId:
+                        Category: Build
+                        Owner: AWS
+                        Provider: CodeBuild
+                        Version: 1
+                      Configuration:
+                        ProjectName: !Ref CodeBuildProjectCentos7
+                      InputArtifacts:
+                        - Name: SourceZip
+                      OutputArtifacts:
+                        - Name: BuiltZipCentos7
+                      RunOrder: 2
+                    - 
+                      Name: CodeBuildUbuntu1604
+                      ActionTypeId:
+                        Category: Build
+                        Owner: AWS
+                        Provider: CodeBuild
+                        Version: 1
+                      Configuration:
+                        ProjectName: !Ref CodeBuildProjectUbuntu1604
+                      InputArtifacts:
+                        - Name: SourceZip
+                      OutputArtifacts:
+                        - Name: BuiltZipUbuntu1604
+                      RunOrder: 2
+
+    ######################
+    # AMI Builder Event  #
+    ######################
+
+    # AmiBuilderNotificationTopic: 
+    #       Type: "AWS::SNS::Topic"
+    #       Properties: 
+    #         Subscription: 
+    #           - 
+    #             Endpoint: !Ref NotificationEmailAddress
+    #             Protocol: "email"
+    #         TopicName: "AmiBuilder-Notify"
+
+    # AmiBuilderNotificationTopicPolicy:
+    #   Type: AWS::SNS::TopicPolicy
+    #   Properties:
+    #     PolicyDocument:
+    #       Id: AllowCloudwatchEventsToPublish
+    #       Version: '2012-10-17'
+    #       Statement:
+    #         - 
+    #           Sid: My-statement-id
+    #           Effect: Allow
+    #           Principal:
+    #             Service: "events.amazonaws.com"
+    #           Action: sns:Publish
+    #           Resource: !Ref AmiBuilderNotificationTopic
+    #     Topics:
+    #       - !Ref AmiBuilderNotificationTopic
+
+    # AmiBuilderCustomEvent:
+    #     Type: "AWS::Events::Rule"
+    #     Properties: 
+    #       Description: "AmiBuilder-Complete"
+    #       EventPattern: 
+    #         source: 
+    #           - "com.ami.builder"
+    #         detail-type: 
+    #           - "AmiBuilder"
+    #         detail: 
+    #           AmiStatus: 
+    #             - "Created"
+    #       State: "ENABLED"
+    #       Targets:
+    #         -
+    #           Id: "NewAMI-Notify"
+    #           Arn: !Ref AmiBuilderNotificationTopic
+
+
+Outputs:
+
+        ArtifactRepository:
+            Description: S3 Bucket for Pipeline and Build Artifacts
+            Value: !Ref BuildArtifactsBucket
+
+        CodePipelineServiceRole:
+            Description: CodePipeline IAM Service Role
+            Value: !GetAtt PipelineExecutionRole.Arn

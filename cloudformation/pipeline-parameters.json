@@ -1,0 +1,26 @@
+[
+  {
+    "ParameterKey": "CodeBuildEnvironment",
+    "ParameterValue": "aws/codebuild/eb-python-2.7-amazonlinux-64:2.1.6"
+  },
+  {
+    "ParameterKey": "NotificationEmailAddress",
+    "ParameterValue": "daniel.depaoli@xpeppers.com"
+  },
+  {
+    "ParameterKey": "GitHubRepoName",
+    "ParameterValue": "packer-silver-ami"
+  },
+  {
+    "ParameterKey": "GitHubUsername",
+    "ParameterValue": "xpeppers"
+  },
+  {
+    "ParameterKey": "BucketName",
+    "ParameterValue": "packer-silver-ami-xpeppers"
+  },
+  {
+    "ParameterKey": "GitHubToken",
+    "ParameterValue": ""
+  } 
+]
