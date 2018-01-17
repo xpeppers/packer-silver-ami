@@ -142,6 +142,27 @@ Resources:
             Source: 
                 Type: CODEPIPELINE
 
+    CodeBuildProjectAMZlinux2:
+        Type: AWS::CodeBuild::Project
+        Properties:
+            Name: CodeBuildProjectAMZlinux2
+            Description: Packer builder
+            TimeoutInMinutes: 30
+            ServiceRole: !GetAtt CodeBuildServiceRole.Arn
+            Artifacts:
+                Type: CODEPIPELINE
+            Environment:
+                Type: LINUX_CONTAINER
+                ComputeType: BUILD_GENERAL1_SMALL
+                Image: !Ref CodeBuildEnvironment
+                EnvironmentVariables:
+                - Name: AWS_REGION
+                  Value: eu-west-1
+                - Name: DISTRO
+                  Value: amzlinux2
+            Source: 
+                Type: CODEPIPELINE
+
     #############
     # Pipeline  #
     #############
@@ -199,6 +220,7 @@ Resources:
                             - !GetAtt CodeBuildProjectRHEL74.Arn
                             - !GetAtt CodeBuildProjectCentos7.Arn
                             - !GetAtt CodeBuildProjectUbuntu1604.Arn
+                            - !GetAtt CodeBuildProjectAMZlinux2.Arn
 
     Pipeline:
         Type: AWS::CodePipeline::Pipeline
@@ -271,6 +293,20 @@ Resources:
                         - Name: SourceZip
                       OutputArtifacts:
                         - Name: BuiltZipUbuntu1604
+                      RunOrder: 2
+                    - 
+                      Name: CodeBuildAMZlinux2
+                      ActionTypeId:
+                        Category: Build
+                        Owner: AWS
+                        Provider: CodeBuild
+                        Version: 1
+                      Configuration:
+                        ProjectName: !Ref CodeBuildProjectAMZlinux2
+                      InputArtifacts:
+                        - Name: SourceZip
+                      OutputArtifacts:
+                        - Name: BuiltZipAMZlinux2
                       RunOrder: 2
 
     ######################
