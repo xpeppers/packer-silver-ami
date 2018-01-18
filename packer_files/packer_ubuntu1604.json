@@ -16,7 +16,13 @@
       "ami_description":"{{user `aws_ami_description`}}",
       "associate_public_ip_address": "true",
       "source_ami": "{{user `source_ami`}}",
-      "ssh_pty": "true"
+      "ssh_pty": "true",
+      "tags": {
+        "OS": "Ubuntu 16.04",
+        "date": "{{isotime \"02Jan2006\"}}",
+        "created_by_pipeline" : "True",
+        "source_ami": "{{user `source_ami`}}"
+      }
     }
   ],
   "provisioners": [

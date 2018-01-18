@@ -3,7 +3,7 @@
     "aws_region": "{{env `AWS_REGION`}}",
     "aws_ami_name": "centos7_{{isotime \"02Jan2006\"}}",
     "aws_ami_description": "Centos 7",
-    "source_ami": "ami-061b1560",
+    "source_ami": "ami-0f80e87c",
     "ssh_username": "centos"
   },
   "builders": [
@@ -13,10 +13,16 @@
       "instance_type": "t2.medium",
       "ssh_username": "{{user `ssh_username`}}",
       "ami_name": "{{user `aws_ami_name`}}",
-      "ami_description":"{{user `aws_ami_description`}}",
+      "ami_description": "{{user `aws_ami_description`}}",
       "associate_public_ip_address": "true",
       "source_ami": "{{user `source_ami`}}",
-      "ssh_pty": "true"
+      "ssh_pty": "true",
+      "tags": {
+        "OS": "Centos 7",
+        "date": "{{isotime \"02Jan2006\"}}",
+        "created_by_pipeline" : "True",
+        "source_ami": "{{user `source_ami`}}"
+      }
     }
   ],
   "provisioners": [
