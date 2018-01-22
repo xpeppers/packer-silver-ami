@@ -22,7 +22,9 @@
         "date": "{{isotime \"02Jan2006\"}}",
         "created_by_pipeline" : "True",
         "source_ami": "{{user `source_ami`}}"
-      }
+      },
+      "subnet_id": "subnet-f6a36092",
+      "vpc_id": "vpc-4b9e772e"
     }
   ],
   "provisioners": [
