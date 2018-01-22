@@ -1,7 +1,7 @@
 {
   "variables": {
     "aws_region": "{{env `AWS_REGION`}}",
-    "aws_ami_name": "centos7_{{isotime \"02Jan2006\"}}",
+    "aws_ami_name": "XPeppers-centos7_{{isotime \"02Jan2006-1504\"}}",
     "aws_ami_description": "Centos 7",
     "source_ami": "ami-0f80e87c",
     "ssh_username": "centos"

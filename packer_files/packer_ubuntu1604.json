@@ -1,7 +1,7 @@
 {
   "variables": {
     "aws_region": "{{env `AWS_REGION`}}",
-    "aws_ami_name": "ubuntu1604_{{isotime \"02Jan2006\"}}",
+    "aws_ami_name": "XPeppers-ubuntu1604_{{isotime \"02Jan2006-1504\"}}",
     "aws_ami_description": "Ubuntu 16.04",
     "source_ami": "ami-4d46d534",
     "ssh_username": "ubuntu"

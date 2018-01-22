@@ -1,7 +1,7 @@
 {
   "variables": {
     "aws_region": "{{env `AWS_REGION`}}",
-    "aws_ami_name": "rhel74_{{isotime \"02Jan2006\"}}",
+    "aws_ami_name": "XPeppers-rhel74_{{isotime \"02Jan2006-1504\"}}",
     "aws_ami_description": "RHEL 7.4",
     "source_ami": "ami-c90195b0",
     "ssh_username": "ec2-user"
