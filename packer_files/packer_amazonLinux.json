@@ -1,0 +1,44 @@
+{
+  "variables": {
+    "aws_region": "{{env `AWS_REGION`}}",
+    "aws_ami_name": "XPeppers-AmazonLinux_{{isotime \"02Jan2006-1504\"}}",
+    "aws_ami_description": "Amazon Linux",
+    "source_ami": "ami-d834aba1",
+    "ssh_username": "ec2-user"
+  },
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "region": "{{user `aws_region`}}",
+      "instance_type": "t2.medium",
+      "ssh_username": "{{user `ssh_username`}}",
+      "ami_name": "{{user `aws_ami_name`}}",
+      "ami_description": "{{user `aws_ami_description`}}",
+      "associate_public_ip_address": "true",
+      "source_ami": "{{user `source_ami`}}",
+      "ssh_pty": "true",
+      "tags": {
+        "OS": "Centos 7",
+        "date": "{{isotime \"02Jan2006\"}}",
+        "created_by_pipeline" : "True",
+        "source_ami": "{{user `source_ami`}}"
+      },
+      "subnet_id": "subnet-f6a36092",
+      "vpc_id": "vpc-4b9e772e"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "sudo yum install -y awslogs"
+      ]
+    },
+    {
+      "type": "ansible-local",
+      "playbook_file": "ansible/site.yaml",
+      "playbook_dir": "ansible",
+      "extra_arguments": [ "--extra-vars", "install_awscli=False install_logs_agent=False install_cfn_bootstrap=False" ]
+    }
+  ]
+}
