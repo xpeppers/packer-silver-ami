@@ -39,9 +39,6 @@ amazon_linux_packages:
   - net-tools
   - nfs-utils
   - telnet
-  - the_silver_searcher
-  - iftop
-  - python-pip
 
 pip_packages:
   - boto
