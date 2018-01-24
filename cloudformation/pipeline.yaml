@@ -148,6 +148,48 @@ Resources:
             Source: 
                 Type: CODEPIPELINE
 
+    CodeBuildProjectAmazonLinux:
+        Type: AWS::CodeBuild::Project
+        Properties:
+            Name: CodeBuildPackerAmazonLinux
+            Description: Packer builder
+            TimeoutInMinutes: 30
+            ServiceRole: !GetAtt CodeBuildServiceRole.Arn
+            Artifacts:
+                Type: CODEPIPELINE
+            Environment:
+                Type: LINUX_CONTAINER
+                ComputeType: BUILD_GENERAL1_SMALL
+                Image: !Ref CodeBuildEnvironment
+                EnvironmentVariables:
+                - Name: AWS_REGION
+                  Value: eu-west-1
+                - Name: DISTRO
+                  Value: amazonLinux
+            Source: 
+                Type: CODEPIPELINE
+
+    CodeBuildProjectAmazonLinux2LTS:
+        Type: AWS::CodeBuild::Project
+        Properties:
+            Name: CodeBuildPackerAmazonLinux2LTS
+            Description: Packer builder
+            TimeoutInMinutes: 30
+            ServiceRole: !GetAtt CodeBuildServiceRole.Arn
+            Artifacts:
+                Type: CODEPIPELINE
+            Environment:
+                Type: LINUX_CONTAINER
+                ComputeType: BUILD_GENERAL1_SMALL
+                Image: !Ref CodeBuildEnvironment
+                EnvironmentVariables:
+                - Name: AWS_REGION
+                  Value: eu-west-1
+                - Name: DISTRO
+                  Value: amazonLinux2LTS
+            Source: 
+                Type: CODEPIPELINE
+
     #############
     # Pipeline  #
     #############
@@ -205,6 +247,8 @@ Resources:
                             - !GetAtt CodeBuildProjectRHEL74.Arn
                             - !GetAtt CodeBuildProjectCentos7.Arn
                             - !GetAtt CodeBuildProjectUbuntu1604.Arn
+                            - !GetAtt CodeBuildProjectAmazonLinux.Arn
+                            - !GetAtt CodeBuildProjectAmazonLinux2LTS.Arn
 
     Pipeline:
         Type: AWS::CodePipeline::Pipeline
@@ -278,7 +322,34 @@ Resources:
                       OutputArtifacts:
                         - Name: BuiltZipUbuntu1604
                       RunOrder: 2
-
+                    - 
+                      Name: CodeBuildAmazonLinux
+                      ActionTypeId:
+                        Category: Build
+                        Owner: AWS
+                        Provider: CodeBuild
+                        Version: 1
+                      Configuration:
+                        ProjectName: !Ref CodeBuildProjectAmazonLinux
+                      InputArtifacts:
+                        - Name: SourceZip
+                      OutputArtifacts:
+                        - Name: BuiltZipAmazonLinux
+                      RunOrder: 2
+                    - 
+                      Name: CodeBuildAmazonLinux2LTS
+                      ActionTypeId:
+                        Category: Build
+                        Owner: AWS
+                        Provider: CodeBuild
+                        Version: 1
+                      Configuration:
+                        ProjectName: !Ref CodeBuildProjectAmazonLinux2LTS
+                      InputArtifacts:
+                        - Name: SourceZip
+                      OutputArtifacts:
+                        - Name: BuiltZipAmazonLinux2LTS
+                      RunOrder: 2
     ######################
     # AMI Builder Event  #
     ######################
