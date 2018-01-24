@@ -78,6 +78,12 @@ Resources:
                           - 's3:GetObjectVersion'
                           - 's3:PutObject'
                         Resource: !Sub 'arn:aws:s3:::${BuildArtifactsBucket}/*'
+                      - 
+                        Sid: "EC2"
+                        Effect: Allow
+                        Action: 
+                          - ec2:ModifyImageAttribute
+                        Resource: '*'
 
     CodeBuildProjectRHEL74:
         Type: AWS::CodeBuild::Project
