@@ -5,10 +5,8 @@ common_packages:
   - curl
   - git
   - htop
-  - iftop
   - mc
   - nano
-  - python-pip
   - rsync
   - tar
   - tree
@@ -22,6 +20,8 @@ debian_packages:
   - netcat
   - silversearcher-ag
   - nfs-common
+  - iftop
+  - python-pip
 
 red_hat_packages:
   - bind-utils
@@ -30,6 +30,18 @@ red_hat_packages:
   - nfs-utils
   - telnet
   - the_silver_searcher
+  - iftop
+  - python-pip
+
+amazon_linux_packages:
+  - bind-utils
+  - nc
+  - net-tools
+  - nfs-utils
+  - telnet
+  - the_silver_searcher
+  - iftop
+  - python-pip
 
 pip_packages:
   - boto

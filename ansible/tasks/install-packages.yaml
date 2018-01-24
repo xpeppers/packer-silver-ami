@@ -25,7 +25,15 @@
     state: latest
     update_cache: yes
   with_items: "{{ common_packages }} + {{ red_hat_packages }}"
-  when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat' or ansible_distribution == 'Amazon'
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat'
+
+- name: Install from yum when Amazon Linux
+  yum:
+    name: "{{item}}"
+    state: latest
+    update_cache: yes
+  with_items: "{{ common_packages }} + {{ amazon_linux_packages }}"
+  when: ansible_distribution == 'Amazon'
 
 - name: Upgrade pip
   pip: 
