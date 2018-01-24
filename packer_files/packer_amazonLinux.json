@@ -31,7 +31,9 @@
     {
       "type": "shell",
       "inline": [
-        "sudo yum install -y awslogs"
+        "sudo yum install -y awslogs",
+        "sudo pip install --upgrade pip",
+        "sudo pip install ansible"
       ]
     },
     {
