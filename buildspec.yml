@@ -30,7 +30,7 @@ phases:
       # Packer doesn't return non-zero status; we must do that if Packer build failed
       - test -s ami_id_${DISTRO}.txt || exit 1
       - sed -i.bak "s/<<AMI-ID>>/$(cat ami_id_${DISTRO}.txt)/g" ami_builder_event.json
-      - aws ec2 modify-image-attribute --image-id `cat ami_id_${DISTRO}.txt` --launch-permission "{\"Add\":[{\"Group\":\"all\"}]}"
+      - aws ec2 modify-image-attribute --image-id `cat ami_id_${DISTRO}.txt` --launch-permission "{\"Add\":[{\"Group\":\"all\"}]}" || echo "Impossible to modify AMI to public access"
       - aws events put-events --entries file://ami_builder_event.json
       - echo "build completed on `date`"
 # artifacts:
