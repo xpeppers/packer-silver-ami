@@ -40,7 +40,14 @@
       "type": "ansible-local",
       "playbook_file": "ansible/site.yaml",
       "playbook_dir": "ansible",
-      "extra_arguments": [ "--extra-vars", "install_awscli=False install_logs_agent=False install_cfn_bootstrap=False" ]
+      "extra_arguments": [
+        "--extra-vars",
+        "install_awscli=False",
+        "--extra-vars",
+        "install_logs_agent=False",
+        "--extra-vars",
+        "install_cfn_bootstrap=False"
+      ]
     }
   ]
 }
