@@ -3,7 +3,7 @@
     "aws_region": "{{env `AWS_REGION`}}",
     "aws_ami_name": "XPeppers-AmazonLinux2LTS_{{isotime \"02Jan2006-1504\"}}",
     "aws_ami_description": "Amazon Linux 2 LTS",
-    "source_ami": "ami-db1688a21",
+    "source_ami": "ami-db1688a2",
     "ssh_username": "ec2-user"
   },
   "builders": [
