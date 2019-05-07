@@ -46,3 +46,6 @@ aws cloudformation create-stack --profile <profile_name> --stack-name codebuild-
 5. Aggiungere nella policy _CodePipelineBuildAccess_ il riferimento alla risorsa Codebuild, in modo che la pipeline possa triggherare la build del nuovo codebuild project
 6. Aggiornare lo stack cloudformation ```aws cloudformation update-stack --profile xpeppers --stack-name silver-ami-pipeline --template-body file://cloudformation/pipeline.yaml --parameters file://cloudformation/pipeline-parameters.json --capabilities CAPABILITY_IAM```
 7. Committare e pushare le modifiche
+
+###
+7 maggio
